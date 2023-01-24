@@ -54,7 +54,6 @@ void readInput()
 				printf("Invalid input, please try again!\n");
 				exit(0);
 			}
-			printf("char%cchar\n", input[i+1]);
 			numbers.push_back(10 + input[i+1]-0x30);
 			count++;
 			i++;
