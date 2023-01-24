@@ -4,9 +4,8 @@ using namespace std::chrono;
 using namespace std;
 
 char input[16];
-
 int integer[4];
-int chosen[4];
+
 int total = 0;
 
 vector<float> numbers;
@@ -48,13 +47,14 @@ void readInput()
 	int count = 0;
 	while(input[i] != 0x0)
 	{
-		if (input[i] == '1' && input[i+1] != ' ')
+		if (input[i] == '1' && input[i+1] != ' ' && input[i+1] != '\n')
 		{
 			if (input[i+1]-0x30 > 3)
 			{
 				printf("Invalid input, please try again!\n");
 				exit(0);
 			}
+			printf("char%cchar\n", input[i+1]);
 			numbers.push_back(10 + input[i+1]-0x30);
 			count++;
 			i++;
@@ -98,7 +98,7 @@ string insertOperator(int op)
 	return " / ";
 }
 
-void findResult(int j, int k, int l, int type)
+void findResult(int i, int j, int k, int type)
 // Push result to vector
 {
 	stringstream answer;
@@ -107,7 +107,7 @@ void findResult(int j, int k, int l, int type)
 	if (type == 1) answer << "(";
 
 	answer << integer[0];
-	answer << insertOperator(j);
+	answer << insertOperator(i);
 
 	if (type == 2 || type == 4 || type == 5) answer << "(";
 	if (type == 5) answer << "(";
@@ -116,7 +116,7 @@ void findResult(int j, int k, int l, int type)
 
 	if (type == 1 || type == 3) answer << ")";
 
-	answer << insertOperator(k);
+	answer << insertOperator(j);
 
 	if (type == 3 || type == 4) answer << "(";
 
@@ -125,7 +125,7 @@ void findResult(int j, int k, int l, int type)
 	if (type == 1 || type == 2 || type == 5) answer << ")";
 	if (type == 2) answer << ")";
 
-	answer << insertOperator(l);
+	answer << insertOperator(k);
 	answer << integer[3];
 
 	if (type == 3 || type == 4 || type == 5) answer << ")";
@@ -144,9 +144,9 @@ void swap(int a, int b)
 	numbers[b] = temp;
 }
 
-void findNumbers(int l, int r)
+void findNumbers(int n)
 {
-	if (l == r && permutations.count(numbers) != 1)
+	if (n == 3 && permutations.count(numbers) != 1)
 	{
 		permutations.insert(numbers);
 		
@@ -200,11 +200,11 @@ void findNumbers(int l, int r)
 	}
 	else
 	{
-		for (int i = l; i <= r; i++)
+		for (int i = n; i <= 3; i++)
 		{
-			swap(l, i);
-			findNumbers(l+1, r);
-			swap(l, i);
+			swap(n, i);
+			findNumbers(n+1);
+			swap(n, i);
 		}
 	}
 }
@@ -216,7 +216,7 @@ int main()
 	
 	auto start = high_resolution_clock::now();
 
-	findNumbers(0, 3);
+	findNumbers(0);
 
 	// Output result
 	auto stop = high_resolution_clock::now();
